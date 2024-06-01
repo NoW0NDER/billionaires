@@ -1,0 +1,125 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Billionaires List</title>
+</head>
+<body>
+    <h1>Billionaires</h1>
+    <table border="1">
+        <tr>
+            <th>Person Name</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Rank</th>
+            <th>Final Worth</th>
+            <th>Source</th>
+            <th>Country</th>
+            <th>City</th>
+        </tr>
+        {% for billionaire in billionaires %}
+        <tr>
+            <td>{{ billionaire.personName }}</td>
+            <td>{{ billionaire.age }}</td>
+            <td>{{ billionaire.gender }}</td>
+            <td>{{ billionaire.rank }}</td>
+            <td>{{ billionaire.finalWorth }}</td>
+            <td>{{ billionaire.source }}</td>
+            <td>{{ billionaire.country }}</td>
+            <td>{{ billionaire.city }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <h2>Search</h2>
+    <form action="/search" method="post">
+        <label for="query">Search:</label>
+        <input type="text" id="query" name="query">
+        <label for="table">Table:</label>
+        <select id="table" name="table">
+            <option value="billionaire">Billionaire</option>
+            <option value="industry">Industry</option>
+            <option value="country">Country</option>
+        </select>
+        <h3>Filters</h3>
+        <label for="filter_column">Filter Column:</label>
+        <input type="text" id="filter_column" name="filter_column">
+        <label for="filter_value">Filter Value:</label>
+        <input type="text" id="filter_value" name="filter_value">
+        <h3>Sorting</h3>
+        <label for="sort_column">Sort Column:</label>
+        <input type="text" id="sort_column" name="sort_column">
+        <label for="sort_order">Sort Order:</label>
+        <select id="sort_order" name="sort_order">
+            <option value="ASC">Ascending</option>
+            <option value="DESC">Descending</option>
+        </select>
+        <input type="submit" value="Search">
+    </form>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Billionaires List</title>
+</head>
+<body>
+    <h1>Billionaires</h1>
+    <table border="1">
+        <tr>
+            <th>Person Name</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Rank</th>
+            <th>Final Worth</th>
+            <th>Source</th>
+            <th>Country</th>
+            <th>City</th>
+            <th>Details</th>
+        </tr>
+        {% for billionaire in billionaires %}
+        <tr>
+            <td>{{ billionaire.personName }}</td>
+            <td>{{ billionaire.age }}</td>
+            <td>{{ billionaire.gender }}</td>
+            <td>{{ billionaire.rank }}</td>
+            <td>{{ billionaire.finalWorth }}</td>
+            <td>{{ billionaire.source }}</td>
+            <td>{{ billionaire.country }}</td>
+            <td>{{ billionaire.city }}</td>
+            <td><a href="/search?query={{ billionaire.personName }}&table=billionaire">View Details</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+    <h2>Search</h2>
+    <form action="/search" method="get">
+        <label for="query">Search:</label>
+        <input type="text" id="query" name="query">
+        <label for="table">Table:</label>
+        <select id="table" name="table">
+            <option value="billionaire">Billionaire</option>
+            <option value="industry">Industry</option>
+            <option value="country">Country</option>
+        </select>
+        <h3>Filters</h3>
+        <label for="filter_column">Filter Column:</label>
+        <input type="text" id="filter_column" name="filter_column">
+        <label for="filter_operator">Operator:</label>
+        <select id="filter_operator" name="filter_operator">
+            <option value="=">=</option>
+            <option value=">">&gt;</option>
+            <option value="<">&lt;</option>
+        </select>
+        <label for="filter_value">Filter Value:</label>
+        <input type="text" id="filter_value" name="filter_value">
+        <h3>Sorting</h3>
+        <label for="sort_column">Sort Column:</label>
+        <input type="text" id="sort_column" name="sort_column">
+        <label for="sort_order">Sort Order:</label>
+        <select id="sort_order" name="sort_order">
+            <option value="ASC">Ascending</option>
+            <option value="DESC">Descending</option>
+        </select>
+        <input type="submit" value="Search">
+    </form>
+</body>
+</html>
