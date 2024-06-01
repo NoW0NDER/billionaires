@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request
 import mysql.connector
 from config import MyCONFIG
 
@@ -42,14 +42,19 @@ def search():
     params = []
 
     if query:
-        sql_query += ' AND personName LIKE %s' if table == 'billionaire' else ' AND industryName LIKE %s' if table == 'industry' else ' AND country LIKE %s'
+        if table == 'billionaire':
+            sql_query += ' AND personName LIKE %s'
+        elif table == 'industry':
+            sql_query += ' AND industryName LIKE %s'
+        else:
+            sql_query += ' AND country LIKE %s'
         params.append('%' + query + '%')
 
     if filter_column and filter_value:
         sql_query += f' AND {filter_column} {filter_operator} %s'
         params.append(filter_value)
 
-    if sort_column:
+    if sort_column and sort_order:
         sql_query += f' ORDER BY {sort_column} {sort_order}'
 
     cursor.execute(sql_query, params)
