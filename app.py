@@ -71,7 +71,7 @@ def search():
 
         if sort_column and sort_order in ['ASC', 'DESC']:
             sql_query += f' ORDER BY {sort_column} {sort_order}'
-
+    print(sql_query, params)
     cursor.execute(sql_query, params)
     results = cursor.fetchall()
 
@@ -80,8 +80,10 @@ def search():
         for result in results:
             if table == 'billionaire':
                 person_name = result['personName']
+                print(f'SELECT * FROM Industry WHERE industryId IN (SELECT industryId FROM BillionaireIndustry WHERE personName = {person_name})')
                 cursor.execute('SELECT * FROM Industry WHERE industryId IN (SELECT industryId FROM BillionaireIndustry WHERE personName = %s)', (person_name,))
                 result['industries'] = cursor.fetchall()
+                print('SELECT * FROM Country WHERE country = %s'%{result['country']}, )
                 cursor.execute('SELECT * FROM Country WHERE country = %s', (result['country'],))
                 result['country_info'] = cursor.fetchall()
 
