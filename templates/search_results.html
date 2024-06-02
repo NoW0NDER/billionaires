@@ -119,8 +119,18 @@
                 <td>
                     <ul>
                     {% for info in result.country_info %}
-                        <li>{{ info.country }} - CPI: {{ info.cpi_country }}</li>
-                        <!-- Add more country info as needed -->
+                        <li>Country: {{ info.country }}</li>
+                        <li>CPI: {{ info.cpi_country }}</li>
+                        <li>CPI Change: {{ info.cpi_change_country }}</li>
+                        <li>GDP: {{ info.gdp_country }}</li>
+                        <li>Gross Tertiary Education Enrollment: {{ info.gross_tertiary_education_enrollment }}</li>
+                        <li>Gross Primary Education Enrollment: {{ info.gross_primary_education_enrollment_country }}</li>
+                        <li>Life Expectancy: {{ info.life_expectancy_country }}</li>
+                        <li>Tax Revenue: {{ info.tax_revenue_country_country }}</li>
+                        <li>Total Tax Rate: {{ info.total_tax_rate_country }}</li>
+                        <li>Population: {{ info.population_country }}</li>
+                        <li>Latitude: {{ info.latitude_country }}</li>
+                        <li>Longitude: {{ info.longitude_country }}</li>
                     {% endfor %}
                     </ul>
                 </td>
