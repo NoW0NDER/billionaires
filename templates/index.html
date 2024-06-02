@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -60,6 +59,17 @@
         <select id="sort_order" name="sort_order">
             <option value="ASC">Ascending</option>
             <option value="DESC">Descending</option>
+        </select>
+        <h3>Aggregation</h3>
+        <label for="query_type">Query Type:</label>
+        <select id="query_type" name="query_type">
+            <option value="">None</option>
+            <option value="total_wealth_by_country">Total Wealth by Country</option>
+            <option value="count_wealthy_over_age">Count of Wealthy over Age</option>
+            <option value="count_wealthy_under_age">Count of Wealthy under Age</option>
+            <option value="avg_age_by_country">Average Age by Country</option>
+            <option value="max_wealth_by_country">Max Wealth by Country</option>
+            <option value="min_wealth_by_country">Min Wealth by Country</option>
         </select>
         <input type="submit" value="Search">
     </form>

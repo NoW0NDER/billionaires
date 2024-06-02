@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import mysql.connector
 from config import MyCONFIG
 
@@ -34,45 +34,61 @@ def search():
     filter_operator = request.args.get('filter_operator', '=')
     sort_column = request.args.get('sort_column')
     sort_order = request.args.get('sort_order')
+    query_type = request.args.get('query_type')
 
     conn = create_connection()
     cursor = conn.cursor(dictionary=True)
-    
-    sql_query = f'SELECT * FROM {table} WHERE 1=1'
-    params = []
 
-    if query:
-        if table == 'billionaire':
-            sql_query += ' AND personName LIKE %s'
-        elif table == 'industry':
-            sql_query += ' AND industryName LIKE %s'
-        else:
-            sql_query += ' AND country LIKE %s'
-        params.append('%' + query + '%')
+    if query_type == 'total_wealth_by_country':
+        sql_query = 'SELECT country, SUM(finalWorth) as total_wealth FROM Billionaire GROUP BY country HAVING total_wealth > %s'
+        params = [filter_value]
+    elif query_type == 'count_wealthy_over_age':
+        sql_query = 'SELECT COUNT(*) as count FROM Billionaire WHERE age > %s'
+        params = [filter_value]
+    elif query_type == 'count_wealthy_under_age':
+        sql_query = 'SELECT COUNT(*) as count FROM Billionaire WHERE age < %s'
+        params = [filter_value]
+    elif query_type == 'avg_age_by_country':
+        sql_query = 'SELECT country, AVG(age) as avg_age FROM Billionaire GROUP BY country'
+        params = []
+    elif query_type == 'max_wealth_by_country':
+        sql_query = 'SELECT country, MAX(finalWorth) as max_wealth FROM Billionaire GROUP BY country'
+        params = []
+    elif query_type == 'min_wealth_by_country':
+        sql_query = 'SELECT country, MIN(finalWorth) as min_wealth FROM Billionaire GROUP BY country'
+        params = []
+    else:
+        sql_query = f'SELECT * FROM {table} WHERE 1=1'
+        params = []
 
-    if filter_column and filter_value:
-        sql_query += f' AND {filter_column} {filter_operator} %s'
-        params.append(filter_value)
+        if query:
+            sql_query += ' AND personName LIKE %s' if table == 'billionaire' else ' AND industryName LIKE %s' if table == 'industry' else ' AND country LIKE %s'
+            params.append('%' + query + '%')
 
-    if sort_column and sort_order:
-        sql_query += f' ORDER BY {sort_column} {sort_order}'
+        if filter_column and filter_value:
+            sql_query += f' AND {filter_column} {filter_operator} %s'
+            params.append(filter_value)
+
+        if sort_column and sort_order in ['ASC', 'DESC']:
+            sql_query += f' ORDER BY {sort_column} {sort_order}'
 
     cursor.execute(sql_query, params)
     results = cursor.fetchall()
-    
+
     # Fetch related data
-    for result in results:
-        if table == 'billionaire':
-            person_name = result['personName']
-            cursor.execute('SELECT * FROM Industry WHERE industryId IN (SELECT industryId FROM BillionaireIndustry WHERE personName = %s)', (person_name,))
-            result['industries'] = cursor.fetchall()
-            cursor.execute('SELECT * FROM Country WHERE country = %s', (result['country'],))
-            result['country_info'] = cursor.fetchall()
+    if not query_type:
+        for result in results:
+            if table == 'billionaire':
+                person_name = result['personName']
+                cursor.execute('SELECT * FROM Industry WHERE industryId IN (SELECT industryId FROM BillionaireIndustry WHERE personName = %s)', (person_name,))
+                result['industries'] = cursor.fetchall()
+                cursor.execute('SELECT * FROM Country WHERE country = %s', (result['country'],))
+                result['country_info'] = cursor.fetchall()
 
     cursor.close()
     conn.close()
 
-    return render_template('search_results.html', results=results, query=query, table=table)
+    return render_template('search_results.html', results=results, query=query, table=table, query_type=query_type)
 
 if __name__ == '__main__':
     app.run(debug=True)
